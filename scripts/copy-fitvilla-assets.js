@@ -110,10 +110,13 @@ function main() {
     const videoFiles = vidDir.filter((f) => f.isFile() && /\.(mp4|mov|webm|MP4|MOV|WEBM)$/i.test(f.name)).sort((a, b) => a.name.localeCompare(b.name));
     const byName = Object.fromEntries(videoFiles.map((f) => [f.name.toUpperCase(), f.name]));
 
-    const cardNames = ["C3630.MP4", "C3631.MP4", "C3632.MP4"];
-    const heroFile = videoFiles.find((f) => !cardNames.includes(f.name.toUpperCase())) || videoFiles[0];
-    if (heroFile && copyFile(path.join(rawVidsPath, heroFile.name), path.join(PUBLIC, "videos", "hero.mp4"))) copied++;
+    // Hero: use C3630.MP4 when present (smaller, can be committed to GitHub); else first video not used for cards
+    const cardNamesForCards = ["C3631.MP4", "C3632.MP4", "C3633.MP4"];
+    const heroName = byName["C3630.MP4"] || (videoFiles.find((f) => !cardNamesForCards.includes(f.name.toUpperCase())) || videoFiles[0]).name;
+    const heroSrc = path.join(rawVidsPath, heroName);
+    if (copyFile(heroSrc, path.join(PUBLIC, "videos", "hero.mp4"))) copied++;
 
+    const cardNames = ["C3631.MP4", "C3632.MP4", "C3633.MP4"];
     const cardSources = [];
     for (const name of cardNames) {
       const actual = byName[name.toUpperCase()];

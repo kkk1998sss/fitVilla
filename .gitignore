@@ -44,10 +44,11 @@ next-env.d.ts
 # If the repo gets too large, remove videos and host them on Vercel Blob or Cloudinary instead.
 # Source folder for copy-assets – do not commit (only hero.mp4 and card-1/2/3.mp4 are needed)
 /public/videos/Raw vids/
-# Videos exceed GitHub 100MB limit – keep locally; for deploy use Vercel Blob or external hosting
+# Videos exceed GitHub 100MB limit – card videos kept locally; hero.mp4 (C3630) allowed if under 100MB
 /public/videos/*.mp4
 /public/videos/*.MP4
 /public/videos/*.mov
 /public/videos/*.webm
+!public/videos/hero.mp4
 !public/videos/README.md
 !public/videos/.gitkeep
