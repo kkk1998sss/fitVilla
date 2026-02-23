@@ -86,6 +86,6 @@ This will copy all in-use assets into `public/`:
 
 **Images** are committed to the repo, so after you run `npm run copy-assets` you can commit and push `public/images/` and deployed builds will show logo, athletes, hero, locations, and experience images.
 
-**Videos** are committed so they work on Vercel. After `npm run copy-assets`, run `git add public/videos` and commit. If the repo gets too large (e.g. push fails), host videos on Vercel Blob or Cloudinary and switch the code to those URLs.
+**Videos** exceed GitHub’s 100 MB file limit (hero.mp4 is ~128 MB, card videos ~64 MB each), so they are in `.gitignore` and are **not** in the repo. For the **deployed site**, host them on [Vercel Blob](https://vercel.com/docs/storage/vercel-blob), Cloudinary, or another CDN and update `videoCards.ts` and `HeroSection.tsx` to use those URLs. Locally, run `npm run copy-assets` so `public/videos/` has hero.mp4 and card-1/2/3.mp4.
 
 After copying (script or manual), restart or refresh the app so the new assets show.
