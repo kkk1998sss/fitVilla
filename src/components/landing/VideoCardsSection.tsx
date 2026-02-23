@@ -1,20 +1,73 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { getVideoCards } from "@/content/videoCards";
 import type { VideoCardItem } from "@/content/videoCards";
 import { Card } from "@/components/ui/Card";
+
+function VideoCard({ card, onPlay }: { card: VideoCardItem; onPlay: () => void }) {
+  const [videoError, setVideoError] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={onPlay}
+      className="experience-fitvilla-rectangle relative block w-full overflow-hidden bg-black text-left focus:outline-none focus:ring-2 focus:ring-fitvilla-cyan focus:ring-inset"
+    >
+      {videoError ? (
+        <Image src={card.imageSrc} alt="" fill className="object-cover" sizes="33vw" unoptimized />
+      ) : (
+        <video
+          src={card.videoSrc}
+          className="h-full w-full object-cover"
+          muted
+          loop
+          playsInline
+          autoPlay
+          poster={card.imageSrc}
+          onError={() => setVideoError(true)}
+        />
+      )}
+    </button>
+  );
+}
+
+function PopupVideo({
+  card,
+  popupVideoRef,
+}: {
+  card: VideoCardItem;
+  popupVideoRef: React.RefObject<HTMLVideoElement | null>;
+}) {
+  const [videoError, setVideoError] = useState(false);
+
+  useEffect(() => {
+    if (!videoError && popupVideoRef.current) popupVideoRef.current.play().catch(() => {});
+  }, [card, videoError, popupVideoRef]);
+
+  if (videoError) {
+    return <Image src={card.imageSrc} alt="" fill className="object-contain" sizes="80vw" unoptimized />;
+  }
+  return (
+    <video
+      ref={popupVideoRef}
+      src={card.videoSrc}
+      className="h-full w-full object-contain"
+      controls
+      autoPlay
+      loop
+      playsInline
+      poster={card.imageSrc}
+      onError={() => setVideoError(true)}
+    />
+  );
+}
 
 export function VideoCardsSection() {
   const cards = getVideoCards();
   const [popupCard, setPopupCard] = useState<VideoCardItem | null>(null);
   const popupVideoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (popupCard && popupVideoRef.current) {
-      popupVideoRef.current.play().catch(() => {});
-    }
-  }, [popupCard]);
 
   return (
     <section
@@ -36,21 +89,7 @@ export function VideoCardsSection() {
               key={card.id}
               className="overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-all hover:border-fitvilla-cyan/30 hover:bg-white/[0.08]"
             >
-              <button
-                type="button"
-                onClick={() => setPopupCard(card)}
-                className="experience-fitvilla-rectangle relative block w-full overflow-hidden bg-black text-left focus:outline-none focus:ring-2 focus:ring-fitvilla-cyan focus:ring-inset"
-              >
-                <video
-                  src={card.videoSrc}
-                  className="h-full w-full object-cover"
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  poster={card.imageSrc}
-                />
-              </button>
+              <VideoCard card={card} onPlay={() => setPopupCard(card)} />
               <div className="p-4 text-center text-sm text-fitvilla-light/80">
                 <h3 className="font-bold text-white">{card.title}</h3>
                 <p className="mt-1">{card.description}</p>
@@ -85,17 +124,8 @@ export function VideoCardsSection() {
               </svg>
             </button>
 
-            <div className="experience-fitvilla-rectangle w-full">
-              <video
-                ref={popupVideoRef}
-                src={popupCard.videoSrc}
-                className="h-full w-full object-contain"
-                controls
-                autoPlay
-                loop
-                playsInline
-                poster={popupCard.imageSrc}
-              />
+            <div className="experience-fitvilla-rectangle relative w-full">
+              <PopupVideo card={popupCard} popupVideoRef={popupVideoRef} />
             </div>
 
             <div className="p-5 text-white">

@@ -3,9 +3,11 @@
  * "Fitvilla photos" Google Drive folder into public/. Keeps repo small for git push.
  *
  * In-use assets copied:
- *   Videos: hero.mp4, card-1.mp4, card-2.mp4, card-3.mp4 (from Raw vids)
- *   Images: hero-1..hero-9, sector-76/sector-133/mayur-vihar, experience.jpg
- *   Logo and athlete cutouts: add manually to public/images/logo and public/images/hero if needed.
+ *   Logo: fitvilla-logo.png (from root or logo/ in Drive)
+ *   Hero: athlete-female.png, athlete-male.png (from root or hero/ in Drive), hero-1..hero-9.jpg
+ *   Locations: sector-76, sector-133, mayur-vihar
+ *   Experience: experience.jpg
+ *   Videos: hero.mp4, card-1/2/3.mp4 (from Raw vids – not committed; use locally or host elsewhere for deploy)
  *
  * Usage:
  *   1. Download the Fitvilla photos folder from Google Drive to your Downloads folder.
@@ -46,36 +48,87 @@ function main() {
   const source = getSourceDir();
   console.log("Source folder:", source);
 
-  if (!fs.existsSync(source)) {
-    console.error("\nFolder not found. Either:");
-    console.error("  1. Download 'Fitvilla photos' from Google Drive to your Downloads folder, or");
-    console.error("  2. Set FITVILLA_DRIVE_PATH to the full path of the folder.");
-    console.error("\nExample (PowerShell): $env:FITVILLA_DRIVE_PATH='C:\\Users\\You\\Downloads\\Fitvilla photos'; npm run copy-assets");
-    process.exit(1);
+  const sourceExists = fs.existsSync(source);
+  if (!sourceExists) {
+    console.log("  (Fitvilla photos folder not found – will only copy videos if public/videos/Raw vids exists)");
   }
 
-  const files = fs.readdirSync(source, { withFileTypes: true });
+  const files = sourceExists ? fs.readdirSync(source, { withFileTypes: true }) : [];
   const imageNames = files.filter((f) => f.isFile() && /\.(jpg|jpeg|png|JPG|JPEG|PNG)$/.test(f.name)).map((f) => f.name).sort();
-  const rawVidsPath = path.join(source, "Raw vids");
-  const hasRawVids = fs.existsSync(rawVidsPath) && fs.statSync(rawVidsPath).isDirectory();
+  const rawVidsPathFromSource = sourceExists ? path.join(source, "Raw vids") : "";
+  let rawVidsPath = rawVidsPathFromSource;
+  let hasRawVids = rawVidsPath && fs.existsSync(rawVidsPath) && fs.statSync(rawVidsPath).isDirectory();
+  if (!hasRawVids) {
+    const publicRawVids = path.join(PUBLIC, "videos", "Raw vids");
+    if (fs.existsSync(publicRawVids) && fs.statSync(publicRawVids).isDirectory()) {
+      rawVidsPath = publicRawVids;
+      hasRawVids = true;
+      console.log("  Using videos from public/videos/Raw vids");
+    }
+  }
+  const logoPath = sourceExists ? path.join(source, "logo") : "";
+  const heroPath = sourceExists ? path.join(source, "hero") : "";
+  const hasLogoDir = logoPath && fs.existsSync(logoPath) && fs.statSync(logoPath).isDirectory();
+  const hasHeroDir = heroPath && fs.existsSync(heroPath) && fs.statSync(heroPath).isDirectory();
+
+  function findImage(nameOrNames) {
+    const names = Array.isArray(nameOrNames) ? nameOrNames : [nameOrNames];
+    const lower = (s) => s.toLowerCase();
+    for (const n of names) {
+      const match = files.find((f) => f.isFile() && lower(f.name) === lower(n));
+      if (match) return path.join(source, match.name);
+      if (hasLogoDir) {
+        const inLogo = fs.readdirSync(logoPath).find((f) => lower(f) === lower(n));
+        if (inLogo) return path.join(logoPath, inLogo);
+      }
+      if (hasHeroDir) {
+        const inHero = fs.readdirSync(heroPath).find((f) => lower(f) === lower(n));
+        if (inHero) return path.join(heroPath, inHero);
+      }
+    }
+    return null;
+  }
 
   let copied = 0;
 
-  // 1. Videos from Raw vids (only in-use: hero + 3 card videos)
-  if (hasRawVids) {
-    const vidDir = fs.readdirSync(rawVidsPath, { withFileTypes: true });
-    const videoFiles = vidDir.filter((f) => f.isFile() && /\.(mp4|mov|webm|MP4|MOV|WEBM)$/i.test(f.name));
-    const byName = Object.fromEntries(videoFiles.map((f) => [f.name.toUpperCase(), f.name]));
-    const cardNames = ["C3630.MP4", "C3631.MP4", "C3632.MP4"];
+  // 0. Logo and athlete images (used in navbar, footer, hero)
+  ensureDir(path.join(PUBLIC, "images", "logo"));
+  ensureDir(path.join(PUBLIC, "images", "hero"));
+  const logoSrc = findImage("fitvilla-logo.png");
+  if (logoSrc && copyFile(logoSrc, path.join(PUBLIC, "images", "logo", "fitvilla-logo.png"))) copied++;
+  const athleteFemaleSrc = findImage("athlete-female.png");
+  if (athleteFemaleSrc && copyFile(athleteFemaleSrc, path.join(PUBLIC, "images", "hero", "athlete-female.png"))) copied++;
+  const athleteMaleSrc = findImage("athlete-male.png");
+  if (athleteMaleSrc && copyFile(athleteMaleSrc, path.join(PUBLIC, "images", "hero", "athlete-male.png"))) copied++;
+  if (!logoSrc) console.log("  (Logo not found in Drive – add public/images/logo/fitvilla-logo.png manually for deploy)");
+  if (!athleteFemaleSrc || !athleteMaleSrc) console.log("  (Athlete images – add athlete-female.png and athlete-male.png to public/images/hero/ if missing)");
 
+  // 1. Videos from Raw vids (hero + 3 card videos)
+  if (hasRawVids) {
+    ensureDir(path.join(PUBLIC, "videos"));
+    const vidDir = fs.readdirSync(rawVidsPath, { withFileTypes: true });
+    const videoFiles = vidDir.filter((f) => f.isFile() && /\.(mp4|mov|webm|MP4|MOV|WEBM)$/i.test(f.name)).sort((a, b) => a.name.localeCompare(b.name));
+    const byName = Object.fromEntries(videoFiles.map((f) => [f.name.toUpperCase(), f.name]));
+
+    const cardNames = ["C3630.MP4", "C3631.MP4", "C3632.MP4"];
     const heroFile = videoFiles.find((f) => !cardNames.includes(f.name.toUpperCase())) || videoFiles[0];
     if (heroFile && copyFile(path.join(rawVidsPath, heroFile.name), path.join(PUBLIC, "videos", "hero.mp4"))) copied++;
 
-    cardNames.forEach((name, i) => {
-      const actualName = byName[name.toUpperCase()] || name;
-      const src = path.join(rawVidsPath, actualName);
+    const cardSources = [];
+    for (const name of cardNames) {
+      const actual = byName[name.toUpperCase()];
+      if (actual) cardSources.push(path.join(rawVidsPath, actual));
+    }
+    if (cardSources.length < 3 && videoFiles.length >= 4) {
+      cardSources.length = 0;
+      for (let i = 1; i <= 3 && i < videoFiles.length; i++) cardSources.push(path.join(rawVidsPath, videoFiles[i].name));
+    }
+    cardSources.forEach((src, i) => {
       if (copyFile(src, path.join(PUBLIC, "videos", `card-${i + 1}.mp4`))) copied++;
     });
+    if (videoFiles.length === 0) console.log("  (No video files in Raw vids – add .mp4/.mov to Raw vids and run again)");
+  } else {
+    console.log("  (No 'Raw vids' folder – create Fitvilla photos/Raw vids and add .mp4 files)");
   }
 
   // 2. Hero images (first 9 only – used by features + video cards + hero poster) -> public/images/hero/hero-1.jpg ... hero-9.jpg

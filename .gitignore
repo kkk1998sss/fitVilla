@@ -40,8 +40,14 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# copied assets (run npm run copy-assets from Drive folder – keeps repo small for push)
-/public/images/
-/public/videos/*
+# Keep README and .gitkeep in videos; video files (*.mp4 etc.) are now committed so they work on Vercel.
+# If the repo gets too large, remove videos and host them on Vercel Blob or Cloudinary instead.
+# Source folder for copy-assets – do not commit (only hero.mp4 and card-1/2/3.mp4 are needed)
+/public/videos/Raw vids/
+# Videos exceed GitHub 100MB limit – keep locally; for deploy use Vercel Blob or external hosting
+/public/videos/*.mp4
+/public/videos/*.MP4
+/public/videos/*.mov
+/public/videos/*.webm
 !public/videos/README.md
 !public/videos/.gitkeep
