@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
-import { MobileStickyCta } from "@/components/layout/MobileStickyCta";
-import { AssetSourceIndicator } from "@/components/dev/AssetSourceIndicator";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,12 +33,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <div className="pb-24 md:pb-0">{children}</div>
-        <Footer />
-        <MobileStickyCta />
-        <WhatsAppButton />
-        <AssetSourceIndicator />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

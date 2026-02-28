@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
@@ -168,19 +167,18 @@ export default function AboutPage() {
         ref={heroRef}
         className="relative flex min-h-[85vh] flex-col items-center justify-center overflow-hidden px-4 py-24 text-center sm:px-6 lg:px-8"
       >
-        {/* Background image + gradients. Place the second provided spin-room image at /public/images/about/about-hero-spin.jpg */}
+        {/* Background: spin studio with city view (about-hero-spin.png) */}
         <div className="absolute inset-0">
-          <Image
-            src="/images/about/about-hero-spin.jpg"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/about/about-hero-spin.png"
             alt=""
-            fill
-            className="object-cover opacity-35"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             sizes="100vw"
-            priority
-            unoptimized
+            fetchPriority="high"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-fitvilla-deep/70 via-black/85 to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(45,212,228,0.12),transparent)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/85 to-black" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_30%,rgba(45,212,228,0.12),transparent_55%)]" />
         </div>
         <div className="relative z-10 mx-auto max-w-4xl">
           <p

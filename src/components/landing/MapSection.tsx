@@ -1,6 +1,13 @@
 "use client";
 
 import { getAllLocations } from "@/content/locations";
+import type { Location } from "@/types";
+
+function buildMapEmbedUrl(loc: Location): string {
+  const query = loc.address ?? loc.name;
+  const encoded = encodeURIComponent(query);
+  return `https://www.google.com/maps?q=${encoded}&output=embed`;
+}
 
 export function MapSection() {
   const locations = getAllLocations();
@@ -23,16 +30,18 @@ export function MapSection() {
               key={loc.slug}
               className="overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-all hover:border-fitvilla-cyan/30"
             >
-              <div className="aspect-video bg-fitvilla-deep">
-                <div className="flex h-full flex-col items-center justify-center gap-2 text-fitvilla-muted/70">
-                  <span className="text-sm font-medium text-fitvilla-light/80">
-                    {loc.name}
-                  </span>
-                  <span className="text-xs">Map placeholder</span>
-                </div>
+              <div className="relative aspect-video bg-fitvilla-deep">
+                <iframe
+                  src={buildMapEmbedUrl(loc)}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="absolute inset-0 h-full w-full border-0"
+                  title={`Map of ${loc.name}`}
+                />
               </div>
               <div className="p-4">
-                <p className="text-sm text-fitvilla-light/80">
+                <p className="text-sm font-medium text-white">{loc.name}</p>
+                <p className="mt-1 text-sm text-fitvilla-light/80">
                   {loc.shortDescription}
                 </p>
               </div>
