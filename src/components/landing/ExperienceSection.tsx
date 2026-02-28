@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { experienceCta } from "@/content/site";
 
-const EXPERIENCE_IMAGE = "/images/experience/experience.jpg";
+import { getImageUrl } from "@/lib/asset-urls";
+const EXPERIENCE_IMAGE = getImageUrl("experience");
 
 const experiencePoints = [
   "Recover in steam and sauna",

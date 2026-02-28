@@ -4,6 +4,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { MobileStickyCta } from "@/components/layout/MobileStickyCta";
+import { AssetSourceIndicator } from "@/components/dev/AssetSourceIndicator";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,6 +42,7 @@ export default function RootLayout({
         <Footer />
         <MobileStickyCta />
         <WhatsAppButton />
+        <AssetSourceIndicator />
       </body>
     </html>
   );

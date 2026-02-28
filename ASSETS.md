@@ -1,7 +1,32 @@
 # FitVilla assets – images and videos from Google Drive
 
-The site uses images and videos from the **Fitvilla photos** Google Drive folder.  
-I can’t download from Drive for you; follow these steps so the app can use them.
+The site uses images and videos from the **Fitvilla photos** Google Drive folder:  
+**[Fitvilla photos – Google Drive](https://drive.google.com/drive/folders/158FPqmKZ89JRpr43mYrAOz-GxuHgK46m)**
+
+You can either **copy files into the project** (below) or **use Drive links directly** (no copy, no Git upload).
+
+---
+
+## Option: Use Google Drive links directly (no copy, no repo upload)
+
+The app can load images (and optionally videos) from your Drive folder via direct links. No download or `copy-assets` needed; good for deployment when you don’t want to commit large files.
+
+1. **Get file IDs**  
+   In [Fitvilla photos](https://drive.google.com/drive/folders/158FPqmKZ89JRpr43mYrAOz-GxuHgK46m), for each file:  
+   Right‑click → **Share** → set to “Anyone with the link” → **Copy link**.  
+   The link looks like `https://drive.google.com/file/d/XXXXXXXXXX/view` — the **file ID** is `XXXXXXXXXX`.
+
+2. **Paste IDs in the app**  
+   Open `src/lib/asset-urls.ts` and fill the `driveFileIds` object with those IDs (e.g. `"hero-1": "abc123..."` for the first hero image). Match keys to usage: `hero-1`…`hero-9`, `sector-76`, `sector-133`, `mayur-vihar`, `experience`, `logo`, `athlete-female`, `athlete-male`, and optionally `hero-video`, `card-1-video`, etc.
+
+3. **Enable Drive mode**  
+   In the project root create or edit `.env.local`:
+   ```bash
+   NEXT_PUBLIC_USE_DRIVE_IMAGES=true
+   ```
+   Restart the dev server. The site will use the Drive URLs for assets that have a file ID; others still use local paths.
+
+**Note:** Drive has rate limits and isn’t a CDN. For a busy production site, prefer copying assets into the repo or using a CDN (Vercel Blob, Cloudinary). Videos from Drive may not always play in `<video>`; local or CDN is more reliable.
 
 ---
 

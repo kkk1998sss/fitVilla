@@ -6,28 +6,81 @@ import { getVideoCards } from "@/content/videoCards";
 import type { VideoCardItem } from "@/content/videoCards";
 import { Card } from "@/components/ui/Card";
 
+const isDriveEmbed = (src: string) => src.includes("drive.google.com");
+
+/** Drive embed URL with autoplay; no external link to open Drive. */
+function getDriveEmbedSrc(src: string) {
+  const sep = src.includes("?") ? "&" : "?";
+  return `${src}${sep}autoplay=1`;
+}
+
 function VideoCard({ card, onPlay }: { card: VideoCardItem; onPlay: () => void }) {
   const [videoError, setVideoError] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const useIframe = isDriveEmbed(card.videoSrc);
 
   return (
     <button
       type="button"
       onClick={onPlay}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        if (!useIframe && videoRef.current) videoRef.current.play().catch(() => {});
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        if (!useIframe && videoRef.current) videoRef.current.pause();
+      }}
       className="experience-fitvilla-rectangle relative block w-full overflow-hidden bg-black text-left focus:outline-none focus:ring-2 focus:ring-fitvilla-cyan focus:ring-inset"
     >
       {videoError ? (
         <Image src={card.imageSrc} alt="" fill className="object-cover" sizes="33vw" unoptimized />
+      ) : useIframe ? (
+        <>
+          {!isHovered ? (
+            <Image src={card.imageSrc} alt="" fill className="object-cover" sizes="33vw" unoptimized />
+          ) : (
+            <iframe
+              src={getDriveEmbedSrc(card.videoSrc)}
+              title={card.title}
+              className="absolute inset-0 h-full w-full object-cover"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              referrerPolicy="no-referrer"
+            />
+          )}
+          <span className="absolute inset-0 z-10 cursor-pointer" aria-hidden />
+          <span
+            className="absolute right-3 top-3 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white ring-2 ring-white/30 transition-colors hover:bg-fitvilla-cyan/90 hover:ring-fitvilla-cyan"
+            aria-hidden
+          >
+            <svg className="ml-1 h-6 w-6 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M8 5v14l11-7L8 5z" />
+            </svg>
+          </span>
+        </>
       ) : (
+        <>
         <video
+          ref={videoRef}
           src={card.videoSrc}
           className="h-full w-full object-cover"
           muted
           loop
           playsInline
-          autoPlay
           poster={card.imageSrc}
           onError={() => setVideoError(true)}
         />
+        <span
+          className="absolute right-3 top-3 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white ring-2 ring-white/30 transition-colors hover:bg-fitvilla-cyan/90 hover:ring-fitvilla-cyan"
+          aria-hidden
+        >
+          <svg className="ml-1 h-6 w-6 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <path d="M8 5v14l11-7L8 5z" />
+          </svg>
+        </span>
+        </>
       )}
     </button>
   );
@@ -41,13 +94,26 @@ function PopupVideo({
   popupVideoRef: React.RefObject<HTMLVideoElement | null>;
 }) {
   const [videoError, setVideoError] = useState(false);
+  const useIframe = isDriveEmbed(card.videoSrc);
 
   useEffect(() => {
-    if (!videoError && popupVideoRef.current) popupVideoRef.current.play().catch(() => {});
-  }, [card, videoError, popupVideoRef]);
+    if (!useIframe && !videoError && popupVideoRef.current) popupVideoRef.current.play().catch(() => {});
+  }, [card, videoError, popupVideoRef, useIframe]);
 
   if (videoError) {
     return <Image src={card.imageSrc} alt="" fill className="object-contain" sizes="80vw" unoptimized />;
+  }
+  if (useIframe) {
+    return (
+      <iframe
+        src={getDriveEmbedSrc(card.videoSrc)}
+        title={card.title}
+        className="absolute inset-0 h-full w-full"
+        allow="autoplay; fullscreen"
+        allowFullScreen
+        referrerPolicy="no-referrer"
+      />
+    );
   }
   return (
     <video
@@ -93,7 +159,6 @@ export function VideoCardsSection() {
               <div className="p-4 text-center text-sm text-fitvilla-light/80">
                 <h3 className="font-bold text-white">{card.title}</h3>
                 <p className="mt-1">{card.description}</p>
-                <span className="mt-2 inline-block text-fitvilla-cyan/90">Click to play</span>
               </div>
             </Card>
           ))}

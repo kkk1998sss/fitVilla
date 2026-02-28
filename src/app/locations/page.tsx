@@ -1,8 +1,5 @@
-/**
- * Locations listing: "Choose Your Nearest Fitvilla" – reuse LocationsSection or custom layout.
- */
-
 import { LocationsSection } from "@/components/landing/LocationsSection";
+import { LocationsMapSection } from "@/components/locations/LocationsMapSection";
 
 export const metadata = {
   title: "Locations | FitVilla",
@@ -12,8 +9,8 @@ export const metadata = {
 export default function LocationsPage() {
   return (
     <main>
+      <LocationsMapSection />
       <LocationsSection />
-      {/* Optional: extra location-specific content */}
     </main>
   );
 }

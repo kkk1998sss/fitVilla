@@ -153,18 +153,105 @@ body {
     brightness(1.08);
 }
 
-/* Experience FitVilla: rectangle cards, increased height, video fits inside (no blur). */
+/* Experience FitVilla: rectangle cards, video aspect shape (16:9). */
 .experience-fitvilla-rectangle {
   aspect-ratio: 16 / 9;
-  min-height: 220px;
+  min-height: 280px;
 }
 @media (min-width: 640px) {
   .experience-fitvilla-rectangle {
-    min-height: 260px;
+    min-height: 340px;
   }
 }
 @media (min-width: 1024px) {
   .experience-fitvilla-rectangle {
-    min-height: 300px;
+    min-height: 420px;
   }
+}
+
+/* About page: timeline progress line + item pop */
+@keyframes about-timeline-item-pop {
+  from {
+    opacity: 0;
+    transform: translateX(-12px) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+.about-timeline-item {
+  opacity: 0;
+  transform: translateX(-12px) translateY(8px);
+}
+.about-timeline-item.in-view {
+  animation: about-timeline-item-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.about-timeline-item.in-view:nth-child(1) { animation-delay: 0ms; }
+.about-timeline-item.in-view:nth-child(2) { animation-delay: 120ms; }
+.about-timeline-item.in-view:nth-child(3) { animation-delay: 240ms; }
+.about-timeline-progress-fill {
+  background: linear-gradient(
+    to bottom,
+    rgba(45, 212, 228, 0.25) 0%,
+    rgba(45, 212, 228, 0.75) 40%,
+    rgba(78, 205, 196, 1) 70%,
+    rgba(45, 212, 228, 0.9) 100%
+  );
+  box-shadow: 0 0 12px rgba(45, 212, 228, 0.3);
+}
+/* About: stagger children */
+.about-stagger > * {
+  opacity: 0;
+  animation: slide-up 0.7s ease-out forwards;
+}
+.about-stagger.in-view > *:nth-child(1) { animation-delay: 0ms; }
+.about-stagger.in-view > *:nth-child(2) { animation-delay: 80ms; }
+.about-stagger.in-view > *:nth-child(3) { animation-delay: 160ms; }
+.about-stagger.in-view > *:nth-child(4) { animation-delay: 240ms; }
+.about-stagger.in-view > *:nth-child(5) { animation-delay: 320ms; }
+.about-stagger.in-view > *:nth-child(6) { animation-delay: 400ms; }
+.about-stagger.in-view > *:nth-child(7) { animation-delay: 480ms; }
+.about-stagger.in-view > *:nth-child(8) { animation-delay: 560ms; }
+.about-stagger.in-view > *:nth-child(9) { animation-delay: 640ms; }
+.about-stagger.in-view > *:nth-child(10) { animation-delay: 720ms; }
+
+/* Features section: card pop-in on scroll */
+@keyframes feature-card-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.feature-card-animate {
+  opacity: 0;
+  transform: scale(0.92) translateY(16px);
+}
+.feature-card-animate.in-view {
+  animation: feature-card-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.feature-card-animate.in-view:nth-child(1) { animation-delay: 0ms; }
+.feature-card-animate.in-view:nth-child(2) { animation-delay: 60ms; }
+.feature-card-animate.in-view:nth-child(3) { animation-delay: 120ms; }
+.feature-card-animate.in-view:nth-child(4) { animation-delay: 180ms; }
+.feature-card-animate.in-view:nth-child(5) { animation-delay: 240ms; }
+.feature-card-animate.in-view:nth-child(6) { animation-delay: 300ms; }
+.feature-card-animate.in-view:nth-child(7) { animation-delay: 360ms; }
+.feature-card-animate.in-view:nth-child(8) { animation-delay: 420ms; }
+.feature-card-animate.in-view:nth-child(9) { animation-delay: 480ms; }
+
+/* Features section: progress bar gradient glow */
+.features-progress-fill {
+  background: linear-gradient(
+    to bottom,
+    rgba(45, 212, 228, 0.25) 0%,
+    rgba(45, 212, 228, 0.7) 30%,
+    rgba(78, 205, 196, 1) 65%,
+    rgba(45, 212, 228, 0.85) 100%
+  );
+  box-shadow: 0 0 14px rgba(45, 212, 228, 0.35);
 }
