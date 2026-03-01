@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { featuresHeadline, featuresSubtext, freeTrialCta } from "@/content/site";
 import { getFeatures } from "@/content/features";
+import { scrollToLeadForm } from "@/lib/scroll";
 import { getFeatureCardImageUrl } from "@/content/ecosystemGallery";
 import { FeatureIcon } from "@/components/icons/FeatureIcons";
 import { Card } from "@/components/ui/Card";
@@ -166,6 +167,7 @@ export function FeaturesSection() {
           <p className="text-fitvilla-light/90">Experience the difference yourself</p>
           <Link
             href="#lead-form"
+            onClick={scrollToLeadForm}
             className="rounded-full bg-fitvilla-cyan px-8 py-3.5 font-semibold text-black transition-all hover:bg-fitvilla-glow hover:shadow-[0_0_20px_rgba(45,212,228,0.35)]"
           >
             {freeTrialCta}

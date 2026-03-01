@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { claimTrialCta } from "@/content/site";
+import { scrollToLeadForm } from "@/lib/scroll";
 import { Card } from "@/components/ui/Card";
 
 const benefits = [
@@ -36,6 +37,7 @@ export function OfferSection() {
         <div className="mt-10 flex justify-center">
           <Link
             href="#lead-form"
+            onClick={scrollToLeadForm}
             className="rounded-full bg-fitvilla-cyan px-8 py-3.5 font-semibold text-black transition-all hover:bg-fitvilla-glow hover:shadow-[0_0_20px_rgba(45,212,228,0.35)]"
           >
             {claimTrialCta}

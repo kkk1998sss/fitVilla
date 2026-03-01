@@ -4,14 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { experienceCta } from "@/content/site";
-
+import { scrollToLeadForm } from "@/lib/scroll";
 import { getImageUrl } from "@/lib/asset-urls";
 const EXPERIENCE_IMAGE = getImageUrl("experience");
 
 const experiencePoints = [
-  "Recover in steam and sauna",
-  "Relax in wellness cafe",
-  "Track progress with BCA",
+  "Steam room, showers and lockers for a complete club experience",
+  "In-house health cafe to refuel (partner: The Healers Cafe)",
+  "BCA body composition analysis to track fat, muscle and progress",
 ];
 
 export function ExperienceSection() {
@@ -51,8 +51,11 @@ export function ExperienceSection() {
               id="experience-heading"
               className="text-3xl font-bold tracking-tight text-white sm:text-4xl"
             >
-              Train with world class equipment
+              A personalised, inclusive place for your workout
             </h2>
+            <p className="mt-4 text-fitvilla-light/90">
+              Achieve your goals under certified trainers. Our biggest club spreads across 10,000 sq ft with dedicated zones for cardio, strength, crossfit, spinning, yoga and Zumba.
+            </p>
             <ul className="mt-6 space-y-4">
               {experiencePoints.map((point, i) => (
                 <li
@@ -68,6 +71,7 @@ export function ExperienceSection() {
             </ul>
             <Link
               href="#lead-form"
+              onClick={scrollToLeadForm}
               className="mt-8 inline-block rounded-full bg-fitvilla-cyan px-8 py-3.5 font-semibold text-black transition-all hover:bg-fitvilla-glow hover:shadow-[0_0_20px_rgba(45,212,228,0.35)]"
             >
               {experienceCta}

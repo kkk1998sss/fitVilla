@@ -66,7 +66,7 @@ export default function ClassesPage() {
             What to expect
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-fitvilla-light/90">
-            Our group classes run across all three locations. Open the schedule to see times, instructors, and availability. No extra charge — just show up and train.
+            Spin, HIIT, yoga, strength, recovery and combat sessions run across Sector 76, Sector 133 and Mayur Vihar. Check the schedule for times and instructors — no extra charge, just show up and train.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-sm text-fitvilla-muted">
             <span>Spin</span>

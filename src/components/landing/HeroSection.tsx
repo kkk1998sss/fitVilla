@@ -9,6 +9,7 @@ import {
   siteTagline,
 } from "@/content/site";
 import { ROUTES } from "@/lib/constants";
+import { scrollToLeadForm } from "@/lib/scroll";
 
 const HERO_VIDEO = "/videos/hero.mp4";
 const HERO_POSTER = "/images/hero/hero-1.jpg"; /* from Drive: first image as poster/fallback */
@@ -44,7 +45,7 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Athletes at left and right ends – transparent, no box; cutout removes solid bg if any */}
+      {/* Athletes at left and right ends – hidden for now (cutout)
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
         aria-hidden
@@ -78,6 +79,7 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+      */}
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
@@ -103,6 +105,7 @@ export function HeroSection() {
         >
           <Link
             href="#lead-form"
+            onClick={scrollToLeadForm}
             className="rounded-full bg-fitvilla-cyan px-8 py-4 text-base font-semibold text-black transition-all hover:bg-fitvilla-glow hover:shadow-[0_0_24px_rgba(45,212,228,0.5)] focus:outline-none focus:ring-2 focus:ring-fitvilla-cyan focus:ring-offset-2 focus:ring-offset-black"
           >
             {freeTrialCta}

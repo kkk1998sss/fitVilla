@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { freeTrialCta } from "@/content/site";
+import { scrollToLeadForm } from "@/lib/scroll";
 
 export function MobileStickyCta() {
   return (
@@ -12,6 +13,7 @@ export function MobileStickyCta() {
       <div className="px-4">
         <Link
           href="#lead-form"
+          onClick={scrollToLeadForm}
           className="flex w-full items-center justify-center rounded-full bg-fitvilla-cyan py-3.5 text-base font-semibold text-black transition-all active:scale-[0.98]"
         >
           {freeTrialCta}

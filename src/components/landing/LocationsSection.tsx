@@ -49,10 +49,10 @@ export function LocationsSection() {
               </div>
               <div className="p-4">
                 <Link
-                  href={ROUTES.location(loc.slug)}
+                  href={ROUTES.locations}
                   className="inline-block rounded-full bg-fitvilla-cyan px-6 py-2.5 text-sm font-semibold text-black transition-all hover:bg-fitvilla-glow"
                 >
-                  Join
+                  Check out
                 </Link>
               </div>
             </article>

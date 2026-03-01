@@ -64,7 +64,7 @@ export default function FacilitiesPage() {
               Explore Our Facilities
             </h2>
             <p className="mt-4 text-lg text-fitvilla-muted">
-              Premium amenities available across all three FitVilla locations.
+              From Technogym floors and BCA body analysis to steam, sauna, lockers and wellness cafe — explore what each branch offers.
             </p>
           </div>
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

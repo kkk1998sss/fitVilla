@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useInView } from "@/hooks/useInView";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { aboutTagline } from "@/content/site";
 
 function useScrollProgress(sectionRef: React.RefObject<HTMLElement | null>) {
   const [progress, setProgress] = useState(0);
@@ -202,6 +203,13 @@ export default function AboutPage() {
           >
             A high-performance fitness environment that blends world-class equipment, expert coaching, and premium training spaces under one roof.
           </p>
+          <p
+            className={`mt-4 text-sm font-medium uppercase tracking-wider text-fitvilla-cyan/90 transition-all duration-1000 delay-200 ${
+              heroInView ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+            }`}
+          >
+            {aboutTagline}
+          </p>
         </div>
       </section>
 
@@ -210,10 +218,13 @@ export default function AboutPage() {
         <div className="mx-auto max-w-3xl text-center">
           <RevealSection>
             <p className="text-lg leading-relaxed text-fitvilla-light/90 sm:text-xl">
-              Fitvilla Gym was built with one clear vision — to create a high-performance fitness environment that blends world-class equipment, expert coaching, and premium training spaces under one roof.
+              Fitvilla Gym offers a personalised, accessible and inclusive place for your workout. Achieve your individual fitness goals under the supervision of certified trainers, with the benefit of an in-house health cafe in partnership with The Healers Cafe — a top-rated health cafe in Noida, NCR.
             </p>
             <p className="mt-6 text-lg leading-relaxed text-fitvilla-light/90 sm:text-xl">
-              What started in Noida has now evolved into one of the fastest-growing luxury fitness brands in Delhi NCR.
+              Our Sector 76 club spans approximately 10,000 sq ft with dedicated areas for cardio (including isolated cabins), weight training, Zumba, yoga, crossfit and spinning. Steam room, showers and lockers are available; the gym is also equipped with a health cafe managed by a top-rated health food chain in NCR.
+            </p>
+            <p className="mt-6 text-lg leading-relaxed text-fitvilla-light/90 sm:text-xl">
+              What started in Noida has now evolved into one of the fastest-growing luxury fitness brands in Delhi NCR, with branches in Sector 76, Sector 133 and Mayur Vihar Phase 1.
             </p>
           </RevealSection>
         </div>

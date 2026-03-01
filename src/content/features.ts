@@ -25,7 +25,7 @@ export const features: Feature[] = [
     id: "zones",
     title: "Dedicated Workout Zones",
     subtext:
-      "Separate zones for cardio, strength training, crossfit, spinning, and group classes like yoga and zumba",
+      "Cardio with isolated cabins, weight training, crossfit, spinning, Zumba, yoga and group classes — each with its own space.",
     priority: "default",
     imageSrc: heroImage(3),
   },
@@ -55,7 +55,8 @@ export const features: Feature[] = [
   {
     id: "cafe",
     title: "Wellness Cafe",
-    subtext: "Refuel with healthy meals, beverages, and nutrition focused options",
+    subtext:
+      "In-house health cafe in partnership with The Healers Cafe — a top-rated health cafe in Noida, NCR. Refuel with healthy meals and nutrition-focused options.",
     priority: "default",
     imageSrc: heroImage(7),
   },
