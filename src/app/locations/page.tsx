@@ -1,5 +1,5 @@
-import { LocationsSection } from "@/components/landing/LocationsSection";
 import { LocationsMapSection } from "@/components/locations/LocationsMapSection";
+import { LocationStackCarousel } from "@/components/locations/LocationStackCarousel";
 
 export const metadata = {
   title: "Locations | FitVilla",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function LocationsPage() {
   return (
     <main className="bg-black">
-      {/* Hero */}
+      {/* Hero – Find Your Nearest Fitvilla */}
       <section className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden px-4 py-24 text-center sm:px-6 lg:px-8">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -28,15 +28,15 @@ export default function LocationsPage() {
             Find Us
           </p>
           <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Our Locations
+            Find Your Nearest Fitvilla
           </h1>
           <p className="mt-6 text-lg text-fitvilla-light/90 sm:text-xl">
-            Three branches across Noida and Delhi — choose your nearest FitVilla.
+            Three branches across Noida and Delhi — explore the map below, then choose your branch.
           </p>
         </div>
       </section>
       <LocationsMapSection />
-      <LocationsSection />
+      <LocationStackCarousel />
     </main>
   );
 }

@@ -11,6 +11,7 @@ import { TransformationsSection } from "@/components/landing/TransformationsSect
 import { OfferSection } from "@/components/landing/OfferSection";
 import { LeadFormSection } from "@/components/landing/LeadFormSection";
 import { MapSection } from "@/components/landing/MapSection";
+import { GoogleReviewsSection } from "@/components/landing/GoogleReviewsSection";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export default function HomePage() {
@@ -23,6 +24,7 @@ export default function HomePage() {
       <ScrollReveal>
         <FeaturesSection />
       </ScrollReveal>
+      
       <ScrollReveal delay={1}>
         <LocationsSection />
       </ScrollReveal>
@@ -37,6 +39,9 @@ export default function HomePage() {
       </ScrollReveal>
       <ScrollReveal delay={1}>
         <LeadFormSection id="lead-form" />
+      </ScrollReveal>
+      <ScrollReveal>
+        <GoogleReviewsSection />
       </ScrollReveal>
       <ScrollReveal>
         <MapSection />

@@ -1,0 +1,158 @@
+/* Location marquee carousel – full-bleed image cards, blurred bottom info */
+
+.carousel {
+  --items: 6;
+  --carousel-duration: 40s;
+  --carousel-item-width: 260px;
+  --carousel-item-height: 400px;
+  --carousel-item-gap: 1.5rem;
+  position: relative;
+  width: min(95vw, 920px);
+  height: var(--carousel-item-height);
+  overflow: clip;
+}
+
+@media (width > 600px) {
+  .carousel {
+    --carousel-duration: 30s;
+    --carousel-item-width: 300px;
+    --carousel-item-height: 480px;
+    --carousel-item-gap: 2rem;
+  }
+}
+
+/* Narrower fade at edges so more of the carousel is visible */
+.carousel.mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
+
+.carousel:hover .article {
+  animation-play-state: paused;
+}
+
+.article {
+  --i: 0;
+  position: absolute;
+  top: 0;
+  left: calc(100% + var(--carousel-item-gap));
+  width: var(--carousel-item-width);
+  height: var(--carousel-item-height);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  will-change: transform;
+  animation: marquee var(--carousel-duration) linear infinite;
+  animation-delay: calc(
+    var(--carousel-duration) / var(--items) * var(--i) * -1
+  );
+}
+
+/* Full card covered by image */
+.imgWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info overlay at bottom with blur – stronger for visibility */
+.info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.5rem 1.25rem 1.25rem;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.7) 50%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--fitvilla-light);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.desc {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.cta {
+  margin-top: 0.5rem;
+  align-self: flex-start;
+  text-decoration: none;
+  text-transform: lowercase;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--fitvilla-cyan);
+  color: var(--fitvilla-cyan);
+  border-radius: 6px;
+  padding: 0.4rem 0.85rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+@media (width > 600px) {
+  .info {
+    padding: 1.75rem 1.5rem 1.5rem;
+  }
+  .title {
+    font-size: 1.35rem;
+  }
+  .desc {
+    font-size: 0.9rem;
+  }
+  .cta {
+    font-size: 0.95rem;
+    padding: 0.45rem 1rem;
+  }
+}
+
+.cta:hover,
+.cta:focus-visible {
+  background: var(--fitvilla-cyan);
+  color: black;
+  outline: none;
+}
+
+@keyframes marquee {
+  100% {
+    transform: translateX(
+      calc(
+        (var(--items) * (var(--carousel-item-width) + var(--carousel-item-gap))) *
+          -1
+      )
+    );
+  }
+}

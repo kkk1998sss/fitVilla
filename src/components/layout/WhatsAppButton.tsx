@@ -3,11 +3,11 @@
 export function WhatsAppButton() {
   return (
     <a
-      href="https://wa.me/"
+      href="https://wa.me/918448519333"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contact on WhatsApp"
-      className="fixed bottom-20 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-all hover:scale-110 hover:shadow-[#25D366]/40 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-black md:bottom-8 md:right-8 md:h-16 md:w-16"
+      className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-all hover:scale-110 hover:shadow-[#25D366]/40 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-black md:h-16 md:w-16"
     >
       <svg
         className="h-7 w-7 md:h-8 md:w-8"

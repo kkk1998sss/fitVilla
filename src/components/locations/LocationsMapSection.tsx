@@ -24,7 +24,7 @@ export function LocationsMapSection() {
   const mapUrl = buildMapUrl(activeLocation);
 
   return (
-    <section className="scroll-mt-20 border-t border-white/10 bg-black px-4 pt-24 pb-16 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
+    <section id="map" className="scroll-mt-20 border-t border-white/10 bg-black px-4 pt-24 pb-16 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,2.1fr)_minmax(0,3fr)] lg:items-start">
           {/* Left: location selector + details */}

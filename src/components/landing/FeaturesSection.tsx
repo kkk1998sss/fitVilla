@@ -72,10 +72,10 @@ function FeatureCard({
   return (
     <div
       ref={ref}
-      className={`feature-card-animate ${inView ? "in-view" : ""}`}
+      className={`feature-card-animate h-full ${inView ? "in-view" : ""}`}
     >
       <Card
-        className={`feature-card group relative overflow-hidden rounded-xl border border-white/10 px-5 py-4 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:border-fitvilla-cyan/40 hover:shadow-[0_12px_40px_-12px_rgba(45,212,228,0.25)] ${
+        className={`feature-card group relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-white/10 px-5 py-4 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:border-fitvilla-cyan/40 hover:shadow-[0_12px_40px_-12px_rgba(45,212,228,0.25)] ${
           f.priority === "highlight"
             ? "ring-1 ring-fitvilla-cyan/20 hover:ring-fitvilla-cyan/40"
             : ""
@@ -105,14 +105,14 @@ function FeatureCard({
             <div className="absolute inset-0 bg-black/55 transition-colors duration-300 group-hover:bg-black/45" aria-hidden />
           </div>
         )}
-        <div className="relative flex flex-col items-center text-center">
+        <div className="relative flex flex-1 flex-col items-center justify-center text-center">
           <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white/10 text-fitvilla-cyan/90 ring-1 ring-white/20 transition-all duration-300 group-hover:bg-fitvilla-cyan/20 group-hover:text-fitvilla-cyan group-hover:ring-fitvilla-cyan/40">
             <FeatureIcon featureId={f.id} />
           </div>
           <h3 className="mt-3 text-base font-semibold text-white">
             {f.title}
           </h3>
-          <p className="mt-1.5 text-sm leading-snug text-fitvilla-light/90">
+          <p className="mt-1.5 flex-1 text-sm leading-snug text-fitvilla-light/90 line-clamp-3">
             {f.subtext}
           </p>
         </div>
@@ -160,7 +160,9 @@ export function FeaturesSection() {
         </div>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f, index) => (
-            <FeatureCard key={f.id} feature={f} index={index} />
+            <div key={f.id} className="h-[200px] sm:h-[220px] lg:h-[240px]">
+              <FeatureCard feature={f} index={index} />
+            </div>
           ))}
         </div>
         <div className="mt-10 flex flex-col items-center gap-4 text-center">

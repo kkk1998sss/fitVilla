@@ -4,8 +4,6 @@ export const phone1 = "+91-8448519333";
 export const phone2 = "+91 96430 60606";
 
 export const importantLinks = [
-  { label: "FAQ", href: "/faq" },
-  { label: "Blog", href: "/blog" },
   { label: "Contact Us", href: "/contact" },
 ];
 
@@ -13,7 +11,7 @@ export const companyLinks = [
   { label: "About us", href: "/about" },
   { label: "Terms & Conditions", href: "/terms" },
   { label: "Privacy Policies", href: "/privacy" },
-  { label: "Contact Us", href: "/contact" },
+  // { label: "Contact Us", href: "/contact" },
 ];
 
 export const locations = [
