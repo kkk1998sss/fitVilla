@@ -13,8 +13,9 @@ const JOIN_PAGE_PATH = "/joinfitvilla";
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isJoinPage = pathname === JOIN_PAGE_PATH;
+  const isAdmin = pathname.startsWith("/admin");
 
-  if (isJoinPage) {
+  if (isJoinPage || isAdmin) {
     return <>{children}</>;
   }
 
