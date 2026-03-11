@@ -14,6 +14,12 @@ function getDriveEmbedSrc(src: string) {
   return `${src}${sep}autoplay=1`;
 }
 
+const ADMIN_STORAGE_KEY = "fitvilla-admin-settings";
+
+type AdminSettingsShape = {
+  videos?: VideoCardItem[];
+};
+
 function VideoCard({ card, onPlay }: { card: VideoCardItem; onPlay: () => void }) {
   const [videoError, setVideoError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -131,9 +137,23 @@ function PopupVideo({
 }
 
 export function VideoCardsSection() {
-  const cards = getVideoCards();
+  const [cards, setCards] = useState<VideoCardItem[]>(() => getVideoCards());
   const [popupCard, setPopupCard] = useState<VideoCardItem | null>(null);
   const popupVideoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    try {
+      if (typeof window === "undefined") return;
+      const raw = window.localStorage.getItem(ADMIN_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as AdminSettingsShape;
+      if (parsed.videos && parsed.videos.length > 0) {
+        setCards(parsed.videos);
+      }
+    } catch {
+      // ignore parse/storage errors, fall back to defaults
+    }
+  }, []);
 
   return (
     <section

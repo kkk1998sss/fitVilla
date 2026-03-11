@@ -2,21 +2,53 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
-  heroHeadline,
-  heroSubtext,
+  heroHeadline as defaultHeroHeadline,
+  heroSubtext as defaultHeroSubtext,
   freeTrialCta,
-  siteTagline,
+  siteTagline as defaultSiteTagline,
 } from "@/content/site";
 import { ROUTES } from "@/lib/constants";
 import { scrollToLeadForm } from "@/lib/scroll";
+import type { HeroSettings } from "@/app/admin/_services/adminSettings";
 
-const HERO_VIDEO = "/videos/hero.mp4";
-const HERO_POSTER = "/images/hero/hero-1.jpg"; /* from Drive: first image as poster/fallback */
+const HERO_VIDEO_DEFAULT = "/videos/hero.mp4";
+const HERO_POSTER_DEFAULT = "/images/hero/hero-1.jpg"; /* from Drive: first image as poster/fallback */
 const ATHLETE_LEFT = "/images/hero/athlete-female.png";
 const ATHLETE_RIGHT = "/images/hero/athlete-male.png";
+const ADMIN_STORAGE_KEY = "fitvilla-admin-settings";
+
+type AdminSettingsShape = {
+  hero?: HeroSettings;
+};
 
 export function HeroSection() {
+  const [hero, setHero] = useState<HeroSettings>({
+    siteTagline: defaultSiteTagline,
+    heroHeadline: defaultHeroHeadline,
+    heroSubtext: defaultHeroSubtext,
+    heroVideoUrl: HERO_VIDEO_DEFAULT,
+    heroPosterUrl: HERO_POSTER_DEFAULT,
+  });
+
+  useEffect(() => {
+    try {
+      if (typeof window === "undefined") return;
+      const raw = window.localStorage.getItem(ADMIN_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as AdminSettingsShape;
+      if (parsed.hero) {
+        setHero((prev) => ({
+          ...prev,
+          ...parsed.hero,
+        }));
+      }
+    } catch {
+      // ignore parse/storage errors, fall back to defaults
+    }
+  }, []);
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -30,9 +62,9 @@ export function HeroSection() {
           loop
           playsInline
           className="h-full w-full object-cover"
-          poster={HERO_POSTER}
+          poster={hero.heroPosterUrl || HERO_POSTER_DEFAULT}
         >
-          <source src={HERO_VIDEO} type="video/mp4" />
+          <source src={hero.heroVideoUrl || HERO_VIDEO_DEFAULT} type="video/mp4" />
         </video>
         {/* Fallback gradient when video missing or loading */}
         <div
@@ -87,18 +119,18 @@ export function HeroSection() {
           className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-fitvilla-cyan opacity-0 animate-[slide-up_0.8s_ease-out_0.2s_forwards]"
           aria-hidden
         >
-          {siteTagline}
+          {hero.siteTagline}
         </p>
         <h1
           id="hero-heading"
           className="mb-6 text-4xl font-bold leading-tight tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl opacity-0 animate-[slide-up_0.8s_ease-out_0.4s_forwards]"
         >
-          {heroHeadline}
+          {hero.heroHeadline}
         </h1>
         <p
           className="mb-10 max-w-2xl mx-auto text-lg text-fitvilla-light/95 sm:text-xl opacity-0 animate-[slide-up_0.8s_ease-out_0.6s_forwards]"
         >
-          {heroSubtext}
+          {hero.heroSubtext}
         </p>
         <div
           className="flex flex-col items-center justify-center gap-4 sm:flex-row opacity-0 animate-[slide-up_0.8s_ease-out_0.8s_forwards]"
