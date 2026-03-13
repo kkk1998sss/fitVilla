@@ -2,11 +2,8 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import {
-  getSampleClassesForWeek,
-  getClassColor,
-  type ClassEvent,
-} from "@/content/classes";
+import { getClassColor, type ClassEvent } from "@/content/classes";
+import { useAdminCalendar, type AdminCalendarEvent } from "@/app/admin/_services/adminCalendar";
 
 type ViewMode = "day" | "week" | "month";
 
@@ -64,11 +61,34 @@ export default function CalendarPage() {
     d.setHours(0, 0, 0, 0);
     return d;
   });
+  const { events: adminEventsRaw } = useAdminCalendar();
+  const [selectedEvent, setSelectedEvent] = useState<ClassEvent | null>(null);
 
   const weekStart = useMemo(() => getWeekStart(cursor), [cursor]);
   const monthStart = useMemo(() => getMonthStart(cursor), [cursor]);
 
-  const events = useMemo(() => getSampleClassesForWeek(weekStart), [weekStart]);
+  const events = useMemo(() => {
+    const adminAsClass: ClassEvent[] = adminEventsRaw.map((ev: AdminCalendarEvent) => {
+      const [yearStr, monthStr, dayStr] = ev.dateKey.split("-");
+      const [startH, startM] = ev.startTime.split(":").map((x) => parseInt(x, 10));
+      const [endH, endM] = ev.endTime.split(":").map((x) => parseInt(x, 10));
+      const year = Number.isFinite(Number(yearStr)) ? Number(yearStr) : new Date().getFullYear();
+      const month = Number.isFinite(Number(monthStr)) ? Number(monthStr) : new Date().getMonth();
+      const day = Number.isFinite(Number(dayStr)) ? Number(dayStr) : new Date().getDate();
+      const start = new Date(year, month, day, startH || 0, startM || 0, 0, 0);
+      const end = new Date(year, month, day, endH || startH || 0, endM || startM || 0, 0, 0);
+      return {
+        id: ev.id,
+        title: ev.title,
+        type: "yoga",
+        start,
+        end,
+        location: ev.location ?? "FitVilla",
+        instructor: ev.description,
+      };
+    });
+    return adminAsClass;
+  }, [adminEventsRaw]);
 
   const eventsByDay = useMemo(() => {
     const map = new Map<string, ClassEvent[]>();
@@ -256,9 +276,11 @@ export default function CalendarPage() {
                 </div>
               ) : (
                 dayEvents.map((ev) => (
-                  <div
+                  <button
                     key={ev.id}
-                    className={`rounded-xl border px-4 py-3 ${getClassColor(ev.type)}`}
+                    type="button"
+                    onClick={() => setSelectedEvent(ev)}
+                    className={`w-full rounded-xl border px-4 py-3 text-left ${getClassColor(ev.type)}`}
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="font-semibold">{ev.title}</span>
@@ -267,7 +289,7 @@ export default function CalendarPage() {
                       </span>
                     </div>
                     <p className="mt-1 text-xs opacity-80">{ev.location}</p>
-                  </div>
+                  </button>
                 ))
               )}
             </div>
@@ -325,15 +347,17 @@ export default function CalendarPage() {
                         className="border-r border-white/5 p-1 last:border-r-0"
                       >
                         {dayEvs.map((ev) => (
-                          <div
+                          <button
                             key={ev.id}
-                            className={`mb-1 rounded border px-2 py-1 text-xs ${getClassColor(ev.type)}`}
+                            type="button"
+                            onClick={() => setSelectedEvent(ev)}
+                            className={`mb-1 w-full rounded border px-2 py-1 text-left text-xs ${getClassColor(ev.type)}`}
                           >
                             <span className="font-medium">{ev.title}</span>
                             <span className="block truncate opacity-80">
                               {ev.location}
                             </span>
-                          </div>
+                          </button>
                         ))}
                       </div>
                     );
@@ -383,12 +407,14 @@ export default function CalendarPage() {
                     </button>
                     <div className="space-y-1">
                       {dayEvs.map((ev) => (
-                        <div
+                        <button
                           key={ev.id}
-                          className={`truncate rounded border px-1.5 py-0.5 text-[10px] ${getClassColor(ev.type)}`}
+                          type="button"
+                          onClick={() => setSelectedEvent(ev)}
+                          className={`w-full truncate rounded border px-1.5 py-0.5 text-left text-[10px] ${getClassColor(ev.type)}`}
                         >
                           {formatTime(ev.start)} {ev.title}
-                        </div>
+                        </button>
                       ))}
                       {(eventsByDay.get(key)?.length ?? 0) > 3 && (
                         <span className="text-[10px] text-fitvilla-muted">
@@ -403,6 +429,73 @@ export default function CalendarPage() {
           </div>
         )}
       </div>
+
+      {/* Event details popup */}
+      {selectedEvent && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-slate-950/95 p-5 shadow-2xl shadow-black/70">
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-fitvilla-cyan">
+                  Class details
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  {selectedEvent.start.getDate()}{" "}
+                  {MONTH_NAMES[selectedEvent.start.getMonth()]}{" "}
+                  {selectedEvent.start.getFullYear()}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedEvent(null)}
+                className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-white/10 hover:text-white"
+                aria-label="Close"
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-3 text-sm">
+              <h2 className="text-base font-semibold text-white">
+                {selectedEvent.title}
+              </h2>
+              <p className="text-xs text-fitvilla-light/90">
+                {formatTime(selectedEvent.start)} – {formatTime(selectedEvent.end)}
+              </p>
+              <p className="text-xs text-fitvilla-light/80">
+                Location: <span className="font-medium">{selectedEvent.location}</span>
+              </p>
+              {selectedEvent.instructor && (
+                <p className="text-xs text-fitvilla-light/80">
+                  Notes: <span className="font-medium">{selectedEvent.instructor}</span>
+                </p>
+              )}
+            </div>
+
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedEvent(null)}
+                className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-xs font-medium text-slate-100 hover:bg-white/10"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

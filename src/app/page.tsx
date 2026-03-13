@@ -2,7 +2,9 @@
  * Home = full landing page. Section order matches wireframe (and mobile stack).
  */
 
+import { AnnouncementBanner } from "@/components/landing/AnnouncementBanner";
 import { HeroSection } from "@/components/landing/HeroSection";
+import { ClassesWeekPreview } from "@/components/landing/ClassesWeekPreview";
 import { VideoCardsSection } from "@/components/landing/VideoCardsSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { LocationsSection } from "@/components/landing/LocationsSection";
@@ -16,8 +18,12 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="pt-16">
+      <AnnouncementBanner />
       <HeroSection />
+      <ScrollReveal>
+        <ClassesWeekPreview />
+      </ScrollReveal>
       <ScrollReveal>
         <VideoCardsSection />
       </ScrollReveal>

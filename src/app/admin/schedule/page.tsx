@@ -1,11 +1,11 @@
- "use client";
+"use client";
 
-import { useAdminSettings } from "../_services/adminSettings";
+import { useAdminAnnouncement } from "../_services/adminAnnouncement";
 
 export default function AdminSchedulePage() {
-  const { settings, status, setScheduleNote } = useAdminSettings();
+  const { announcement, status, setMessage } = useAdminAnnouncement();
 
-  if (!settings) {
+  if (!announcement) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <p className="text-sm text-slate-400">Loading schedule tools…</p>
@@ -28,10 +28,12 @@ export default function AdminSchedulePage() {
           className={`rounded-full px-3 py-1 text-[11px] font-semibold ${
             status === "saved"
               ? "bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-500/50"
-              : "bg-slate-700/70 text-slate-200 ring-1 ring-slate-600/60"
+              : status === "saving"
+                ? "bg-amber-500/20 text-amber-100 ring-1 ring-amber-500/50"
+                : "bg-slate-700/70 text-slate-200 ring-1 ring-slate-600/60"
           }`}
         >
-          {status === "saved" ? "Saved" : "Autosave idle"}
+          {status === "saved" ? "Saved" : status === "saving" ? "Saving…" : "Autosave idle"}
         </span>
       </div>
 
@@ -46,21 +48,28 @@ export default function AdminSchedulePage() {
               Schedule Note / Announcement
             </label>
             <textarea
-              value={settings.scheduleNote}
-              onChange={(e) => setScheduleNote(e.target.value)}
+              value={announcement.message}
+              onChange={(e) => setMessage(e.target.value)}
               rows={5}
               className="w-full resize-none rounded-2xl border border-emerald-500/40 bg-black/40 px-3 py-2 text-sm text-emerald-50 outline-none ring-emerald-400/50 placeholder:text-emerald-200/60 focus:border-emerald-400/80 focus:ring-2"
               placeholder="Example: Yoga classes will run on a special extended schedule this week due to the festival season…"
             />
+            <button
+              type="button"
+              onClick={() => setMessage("")}
+              className="mt-2 inline-flex items-center rounded-full border border-emerald-500/40 bg-black/40 px-3 py-1.5 text-[11px] font-medium text-emerald-100 transition hover:bg-emerald-500/20"
+            >
+              Clear banner
+            </button>
           </div>
           <div className="rounded-2xl border border-emerald-500/30 bg-black/40 p-3 text-xs text-emerald-50/90">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-200">
-              Coming Next
+              How this appears
             </p>
             <ul className="mt-2 space-y-1 text-[11px]">
-              <li>• Connect this note to the public class schedule page.</li>
-              <li>• Allow adding full weekly schedule from here.</li>
-              <li>• Sync with a shared database so all branches see updates.</li>
+              <li>• Shown as a banner on the main site above the quick-view calendar.</li>
+              <li>• Use it for holiday timings, special events or urgent updates.</li>
+              <li>• Clearing the text will hide the banner for visitors.</li>
             </ul>
           </div>
         </div>
@@ -68,4 +77,5 @@ export default function AdminSchedulePage() {
     </div>
   );
 }
+
 

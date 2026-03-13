@@ -2,14 +2,12 @@
 
 import Link from "next/link";
 import { freeTrialCta } from "@/content/site";
-import { getTestimonialByIndex } from "@/content/testimonials";
 import { scrollToLeadForm } from "@/lib/scroll";
 import { Card } from "@/components/ui/Card";
 
 const PLACEHOLDER_COUNT = 3;
 
 export function TransformationsSection() {
-  const testimonial = getTestimonialByIndex(0);
 
   return (
     <section
@@ -40,16 +38,6 @@ export function TransformationsSection() {
             </Card>
           ))}
         </div>
-        <blockquote className="mx-auto mt-12 max-w-2xl text-center">
-          <p className="text-lg italic text-fitvilla-light/90">
-            &ldquo;{testimonial.quote}&rdquo;
-          </p>
-          {(testimonial.role || testimonial.name) && (
-            <footer className="mt-3 text-sm text-fitvilla-muted">
-              — {[testimonial.name, testimonial.role].filter(Boolean).join(" · ")}
-            </footer>
-          )}
-        </blockquote>
         <div className="mt-10 flex justify-center">
           <Link
             href="#lead-form"

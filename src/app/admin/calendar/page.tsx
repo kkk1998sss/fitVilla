@@ -61,7 +61,11 @@ export default function AdminCalendarPage() {
   const [startTime, setStartTime] = useState("06:00");
   const [endTime, setEndTime] = useState("07:00");
 
-  const { eventsByDay, addEvent } = useAdminCalendar();
+  const { eventsByDay, addEvent, deleteEvent } = useAdminCalendar();
+  const BRANCHES = ["Sector 76", "Sector 133", "Mayur Vihar"] as const;
+  const [selectedBranch, setSelectedBranch] = useState<(typeof BRANCHES)[number] | "other">(
+    "Sector 76"
+  );
 
   const monthStart = useMemo(() => getMonthStart(cursor), [cursor]);
 
@@ -91,6 +95,7 @@ export default function AdminCalendarPage() {
     setSelectedDate(d);
     setTitle("");
     setLocation("");
+    setSelectedBranch("Sector 76");
     setDescription("");
     setStartTime("06:00");
     setEndTime("07:00");
@@ -101,10 +106,14 @@ export default function AdminCalendarPage() {
     if (!selectedDate || !title.trim()) {
       return;
     }
+    const finalLocation =
+      selectedBranch === "other"
+        ? location.trim() || undefined
+        : selectedBranch;
     addEvent({
       title: title.trim(),
       description: description.trim() || undefined,
-      location: location.trim() || undefined,
+      location: finalLocation,
       dateKey: formatDateKey(selectedDate),
       startTime,
       endTime,
@@ -211,7 +220,7 @@ export default function AdminCalendarPage() {
                 );
               }
               const key = formatDateKey(d);
-              const dayEvs = eventsByDay.get(key) ?? [];
+                const dayEvs = eventsByDay.get(key) ?? [];
               const isCurrent = isSameDay(d, cursor);
               return (
                 <div
@@ -233,9 +242,19 @@ export default function AdminCalendarPage() {
                     {dayEvs.slice(0, 3).map((ev) => (
                       <div
                         key={ev.id}
-                        className="truncate rounded border border-fitvilla-cyan/40 bg-fitvilla-cyan/10 px-1.5 py-0.5 text-[10px] text-fitvilla-cyan"
+                        className="flex items-center gap-1 truncate rounded border border-fitvilla-cyan/40 bg-fitvilla-cyan/10 px-1.5 py-0.5 text-[10px] text-fitvilla-cyan"
                       >
-                        {ev.startTime} {ev.title}
+                        <span className="flex-1 truncate">
+                          {ev.startTime} {ev.title}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => void deleteEvent(ev.id)}
+                          className="rounded-full bg-black/40 px-1 text-[10px] text-rose-300 hover:bg-rose-500/30 hover:text-white"
+                          aria-label="Delete class"
+                        >
+                          ×
+                        </button>
                       </div>
                     ))}
                     {dayEvs.length > 3 && (
@@ -327,13 +346,31 @@ export default function AdminCalendarPage() {
                 <label className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
                   Location
                 </label>
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-black/60 px-3 py-2 text-xs text-white outline-none ring-fitvilla-cyan/40 placeholder:text-slate-500 focus:border-fitvilla-cyan/60 focus:ring-2"
-                  placeholder="Sector 76, Sector 133, Mayur Vihar…"
-                />
+                <div className="flex gap-2">
+                  <select
+                    value={selectedBranch}
+                    onChange={(e) =>
+                      setSelectedBranch(e.target.value as (typeof BRANCHES)[number] | "other")
+                    }
+                    className="w-40 rounded-xl border border-white/15 bg-black/60 px-2 py-2 text-xs text-white outline-none ring-fitvilla-cyan/40 focus:border-fitvilla-cyan/60 focus:ring-2"
+                  >
+                    {BRANCHES.map((b) => (
+                      <option key={b} value={b}>
+                        {b}
+                      </option>
+                    ))}
+                    <option value="other">Other…</option>
+                  </select>
+                  {selectedBranch === "other" && (
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      className="flex-1 rounded-xl border border-white/15 bg-black/60 px-3 py-2 text-xs text-white outline-none ring-fitvilla-cyan/40 placeholder:text-slate-500 focus:border-fitvilla-cyan/60 focus:ring-2"
+                      placeholder="Custom location"
+                    />
+                  )}
+                </div>
               </div>
               <div>
                 <label className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">

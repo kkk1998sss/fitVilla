@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -12,11 +12,10 @@ export type AdminCalendarEvent = {
   endTime: string; // "HH:MM"
 };
 
-const STORAGE_KEY = "fitvilla-admin-calendar";
-
 type UseAdminCalendarResult = {
   events: AdminCalendarEvent[];
-  addEvent: (ev: Omit<AdminCalendarEvent, "id">) => void;
+  addEvent: (ev: Omit<AdminCalendarEvent, "id">) => Promise<void>;
+  deleteEvent: (id: string) => Promise<void>;
   eventsByDay: Map<string, AdminCalendarEvent[]>;
 };
 
@@ -24,32 +23,49 @@ export function useAdminCalendar(): UseAdminCalendarResult {
   const [events, setEvents] = useState<AdminCalendarEvent[]>([]);
 
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as AdminCalendarEvent[];
-      setEvents(parsed);
-    } catch {
-      // ignore
-    }
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/admin/calendar");
+        if (!res.ok) return;
+        const data = (await res.json()) as AdminCalendarEvent[];
+        if (!cancelled) setEvents(data);
+      } catch {
+        // ignore
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  useEffect(() => {
+  const addEvent = async (ev: Omit<AdminCalendarEvent, "id">) => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+      const res = await fetch("/api/admin/calendar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ev),
+      });
+      if (!res.ok) return;
+      const created = (await res.json()) as AdminCalendarEvent;
+      setEvents((prev) => [...prev, created]);
     } catch {
       // ignore
     }
-  }, [events]);
+  };
 
-  const addEvent = (ev: Omit<AdminCalendarEvent, "id">) => {
-    setEvents((prev) => [
-      ...prev,
-      {
-        ...ev,
-        id: `admin-ev-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      },
-    ]);
+  const deleteEvent = async (id: string) => {
+    try {
+      await fetch("/api/admin/calendar", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      setEvents((prev) => prev.filter((ev) => ev.id !== id));
+    } catch {
+      // ignore
+    }
   };
 
   const eventsByDay = useMemo(() => {
@@ -64,6 +80,7 @@ export function useAdminCalendar(): UseAdminCalendarResult {
     return map;
   }, [events]);
 
-  return { events, addEvent, eventsByDay };
+  return { events, addEvent, deleteEvent, eventsByDay };
 }
+
 
