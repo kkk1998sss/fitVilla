@@ -25,5 +25,14 @@
     "startTime": "21:00",
     "endTime": "22:00",
     "id": "admin-ev-1773392463681-l5zjde"
+  },
+  {
+    "title": "Morning Yoga",
+    "description": "Please Join",
+    "location": "Sector 76",
+    "dateKey": "2026-2-14",
+    "startTime": "06:00",
+    "endTime": "07:00",
+    "id": "admin-ev-1773404955659-vegkwr"
   }
 ]

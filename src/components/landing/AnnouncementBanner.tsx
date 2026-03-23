@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FontWeightText } from "@/registry/eldoraui/font-weight-text";
 
 type AdminAnnouncement = {
   message?: string | null;
@@ -36,8 +37,16 @@ export function AnnouncementBanner() {
           <span>Schedule update</span>
         </span>
         <div className="flex-1 overflow-hidden">
-          <div className="font-semibold text-[11px] text-white sm:text-sm whitespace-nowrap overflow-hidden text-ellipsis">
-            {announcement}
+          <div className="overflow-hidden text-ellipsis whitespace-nowrap">
+            <FontWeightText
+              text={announcement}
+              fontSize={14}
+              className="text-cyan-200"
+              minWeight={500}
+              maxWeight={850}
+              animationDuration={1.6}
+              delayMultiplier={0.03}
+            />
           </div>
         </div>
       </div>

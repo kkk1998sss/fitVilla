@@ -84,6 +84,18 @@
   }
 }
 
+@keyframes fv-font-weight-pulse {
+  0%,
+  100% {
+    font-weight: var(--fv-min-weight);
+    opacity: 0.9;
+  }
+  50% {
+    font-weight: var(--fv-max-weight);
+    opacity: 1;
+  }
+}
+
 /* Lead form – voyage-style 3D slider (current / previous / next) */
 .voyage-slider {
   --slide-width: min(18vw, 200px);

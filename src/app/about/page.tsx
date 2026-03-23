@@ -103,6 +103,17 @@ const standardPillars = [
   "Member satisfaction",
 ];
 
+const teamMembers = [
+  { name: "Dr Tarun", role: "Head of Operations" },
+  { name: "Shivam Chauhan", role: "Business Operations Manager" },
+  { name: "Manoj Pant", role: "Club Manager 133" },
+  { name: "Varun Rathode", role: "Club Manager 76" },
+  { name: "Akshay Rathi", role: "Club Manager Mayur Vihar" },
+  { name: "Naveen Bhist", role: "Fitness Manager 133" },
+  { name: "Anshu Majumdar", role: "Fitness Manager 76" },
+];
+
+
 function TimelineItem({
   item,
 }: {
@@ -355,17 +366,77 @@ export default function AboutPage() {
 
       {/* Mission */}
       <section className="border-t border-white/10 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="mx-auto max-w-4xl text-center">
           <RevealSection>
             <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
               Our Mission
             </h2>
           </RevealSection>
           <RevealSection delay={1}>
-            <blockquote className="mt-8 text-xl font-medium text-fitvilla-light/95 sm:text-2xl">
-              To build a fitness ecosystem where performance meets luxury and every member experiences transformation backed by expertise and infrastructure.
-            </blockquote>
+            <p className="mt-8 text-lg leading-relaxed text-fitvilla-light/90 sm:text-xl">
+              In a country where fitness is often compromised by crowded spaces, outdated machines,
+              and inconsistent hygiene, FitVilla was built to change the standard, not just meet it.
+            </p>
+            <p className="mt-5 text-lg leading-relaxed text-fitvilla-light/90 sm:text-xl">
+              We believe fitness isn&apos;t a luxury. It&apos;s a basic need that deserves better
+              infrastructure, better environments, and better intent.
+            </p>
+            <p className="mt-5 text-lg leading-relaxed text-fitvilla-cyan sm:text-xl">
+              To upgrade everyday living for residents across India by building fitness
+              infrastructure that is accessible, reliable, and designed for real life.
+            </p>
+            <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 px-6 py-5 text-left">
+              <p className="mb-3 text-lg font-semibold text-white">FitVilla solves this with spaces that are:</p>
+              <ul className="space-y-2 text-fitvilla-light/90">
+                <li>• Built with intent, not as an afterthought</li>
+                <li>• Equipped with modern, high-performance machines</li>
+                <li>• Maintained with uncompromised hygiene and safety standards</li>
+                <li>• Designed to feel comfortable for everyone, without intimidation</li>
+              </ul>
+            </div>
+            <p className="mt-6 text-lg leading-relaxed text-fitvilla-light/90 sm:text-xl">
+              This is fitness that fits into your life, not something you have to rearrange your
+              life for.
+            </p>
           </RevealSection>
+        </div>
+      </section>
+
+      {/* Team */}
+      <section className="border-t border-white/10 px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <RevealSection>
+            <h2 className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Leadership Team
+            </h2>
+          </RevealSection>
+          <RevealSection delay={1}>
+            <p className="mt-4 text-center text-fitvilla-light/80">
+              The people building the FitVilla standard every day.
+            </p>
+          </RevealSection>
+          <div className="mt-12 overflow-x-auto overflow-y-visible pb-3 pt-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex min-w-max gap-5 pr-2">
+            {teamMembers.map((member, i) => (
+              <RevealSection key={member.name} delay={(i % 4) as 0 | 1 | 2 | 3}>
+                <div className="group relative h-72 w-[280px] shrink-0 overflow-hidden rounded-2xl border border-fitvilla-cyan/30 bg-gradient-to-br from-fitvilla-deep/80 via-black to-black shadow-[0_0_0_rgba(45,212,228,0)] transition-all duration-500 hover:-translate-y-1 hover:border-fitvilla-cyan/70 hover:shadow-[0_0_36px_rgba(45,212,228,0.25)]">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(45,212,228,0.20),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(45,212,228,0.12),transparent_40%)] transition-all duration-500 group-hover:scale-110" />
+                  <div className="pointer-events-none absolute inset-0 bg-black/10 backdrop-blur-0 transition-all duration-500 group-hover:bg-black/35 group-hover:backdrop-blur-md" />
+
+                  {/* Name stays visible at all times */}
+                  <div className="absolute inset-x-0 bottom-0 z-20 p-5">
+                    <p className="text-lg font-bold tracking-tight text-white drop-shadow">
+                      {member.name}
+                    </p>
+                    <p className="mt-2 max-h-0 overflow-hidden text-sm font-medium text-fitvilla-cyan opacity-0 transition-all duration-500 group-hover:max-h-16 group-hover:opacity-100">
+                      {member.role}
+                    </p>
+                  </div>
+                </div>
+              </RevealSection>
+            ))}
+            </div>
+          </div>
         </div>
       </section>
 
